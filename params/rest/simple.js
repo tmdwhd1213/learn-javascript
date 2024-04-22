@@ -12,3 +12,19 @@ function validateCharacterCount2(max, ...items) {
 }
 
 console.log(validateCharacterCount2(2, "asdasd"));
+
+// rest는 매개변수가 뭔지 모를 때 쓰는 디버깅에 활용하는 매우 훌륭한 방법임.
+const e = ["Spirited Away", "Princess Mononoke"].map((film, ...other) => {
+  console.log(JSON.stringify(other));
+  return film.toLowerCase();
+});
+
+console.log(e);
+
+// 부수 효과 없애면서 쉽게 배열 분리하는 법.
+const queue = ["stop", "collabo", "listen"];
+const [first, ...remaining] = queue;
+console.log(remaining); // ['collabo', 'listen']
+
+// 주의! pop()메서드로는 못함.
+// const [...begin, last] = queue; // rest 요소는 배열 구조 파괴 패턴의 마지막 요소여야 합니다.ts(2462)
