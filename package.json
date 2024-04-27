@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "mocha --require ts-node/register test/**.spec.ts",
     "start": "node dist/problems.js",
