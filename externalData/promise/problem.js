@@ -81,7 +81,7 @@ failUserPreferencesPromise()
   });
 // 실패: 접근 거부됨.
 
-function getMusicPromise(theme) {
+export function getMusicPromise(theme) {
   if (theme === "dusk") {
     return Promise.resolve({
       album: "music for airports",
@@ -98,7 +98,7 @@ getUserPreferencesPromise()
   })
   .then((music) => console.log(music.album));
 
-function getArtist(album) {
+export function getArtist(album) {
   return Promise.resolve({
     artist: "Brian Eno",
   });
