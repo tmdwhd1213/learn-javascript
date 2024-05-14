@@ -54,3 +54,67 @@ console.log(x); // global
 
 // 컴퓨터로 예를 들면, 파일명은 유일해야함. (식별자)
 // 같은 이름을 써야만할 때, 우리는 디렉터리(함수)로 구분할 수 있음.
+
+var x = "global x";
+var y = "global y";
+
+function outer() {
+  var z = "outers local z";
+
+  console.log(x); // global x
+  console.log(y); // global y
+  console.log(z); // outer's local z
+
+  function inner() {
+    var x = `inner's local x`;
+
+    console.log(x); // inner's local x
+    console.log(y); // global y
+    console.log(z); // outer's local z
+  }
+
+  inner();
+}
+
+outer();
+
+console.log(x); // global x
+// console.log(z); // ReferenceError z is not defined
+
+// 스코프 체인을 통해, 변수를 참조하는 코드의 스코프에서 상위 스코프로 방향으로 이동하며 선언된 변수를 검색한다.
+
+// 스코프 체인에 의한 함수 검색
+function foa() {
+  console.log("global function foa");
+}
+
+function baa() {
+  // 중첩함수
+  function foa() {
+    console.log("local function foa");
+  }
+  foa(); // local function foa
+}
+
+baa();
+
+// 스코프란 함수도 똑같이 스코프가 작동하므로 변수만이 아닌, 식별자를 검색하는 규칙이라고 생각하면 됨.
+
+// 지역(local)은 함수 몸체 내부를 말하고 지역은 지역 스코프를 만든다.
+// 이는 코드블록이 아닌 함수에 의해서만 지역 스코프가 생성된다는 것임.
+// 대부분의 프로그래밍 언어에서는 블록 레벨 스코프로 지역 스코프가 만들어짐. if, while, try/catch 등
+// JS의 var 키워드는 함수레벨 스코프만을 지역으로 삼음.
+
+// JS -> 랙시컬 스코프 : 함수를 어디서 정의했는지 -> par를 밖에서 정의함.(전역 스코프에서)
+var x = 1;
+
+function poo() {
+  var x = 10;
+  par();
+}
+function par() {
+  console.log(x);
+}
+
+poo(); // 10; x -> 1
+par(); // 1;
