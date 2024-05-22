@@ -33,3 +33,10 @@ console.log(typeof num, num); //number 1.5
 
 console.log(globalThis === this); // false
 console.log(0xff);
+
+const URI = `http://www.example.com?name=이웅모&job=programmer&teacher`;
+const ENC = encodeURI(URI);
+console.log(ENC); // http://www.example.com?name=%EC%9D%B4%EC%9B%85%EB%AA%A8&job=programmer&teacher
+
+const DEC = decodeURI(ENC);
+console.log(DEC); // http://www.example.com?name=이웅모&job=programmer&teacher
