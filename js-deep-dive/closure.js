@@ -319,3 +319,5 @@ for (var i = 0; i < 3; i++) {
 for (var j = 0; j < funcs.length; j++) {
   console.log(funcs[j]()); // 0 1 2
 }
+
+// let 키워드로 쉽게 해결하기
