@@ -330,3 +330,59 @@ console.log(colorRectangle.toString()); // width = 2, height = 4, color = red
 
 // 자식클래스는 자신이 직접 인스턴스를 생성하지 않고 부모클래스에게 인스턴스 생성을 위임한다.
 // 이것이 바로 자식클래스의 constructor에서 반드시 super를 호출해야 하는 이유다.
+
+// 수퍼클래스
+class Rect {
+  constructor(width, height) {
+    // 암묵적으로 빈 객체, 즉 인스턴스가 생성되고 this에 바인딩된다.
+    console.log(this); // ColorRect
+    // new 연산자와 함께 호출된 함수, 즉 new.target 은 ColorRect이다.
+    console.log(new.target); // ColorRect
+
+    // 생성된 인스턴스의 프로토타입으로 ColorRect.prototype이 설정된다.
+    console.log(Object.getPrototypeOf(this) === ColorRect.prototype); // true
+    console.log(this instanceof ColorRect); // true
+    console.log(this instanceof Rect); // true
+
+    // 인스턴스 초기화
+    this.width = width;
+    this.height = height;
+
+    console.log(this); // ColorRect {width:2, height: 4}
+  }
+}
+
+class ColorRect extends Rect {
+  constructor(width, height, color) {
+    super(width, height);
+
+    // super가 반환한 인스턴스가 this에 바인딩된다.
+    console.log(this); // ColorRect {width:2, height: 4}
+
+    // 인스턴스 초기화
+    this.color = color;
+    console.log(this); // ColorRect {width: 2, height: 4, color: 'blue'}
+  }
+}
+
+const colorRect = new ColorRect(2, 4, "blue");
+
+class MyArray extends Array {
+  uniq() {
+    return this.filter((v, i, self) => self.indexOf(v) === i);
+  }
+
+  average() {
+    return this.reduce((pre, cur) => pre + cur, 0) / this.length;
+  }
+
+  static get [Symbol.species]() {
+    return Array;
+  }
+}
+
+const myArray = new MyArray(1, 1, 2, 3);
+console.log(myArray); // MyArray(4) [1, 1, 2, 3]
+
+console.log(myArray.uniq()); // [1,2,3]
+console.log(myArray.average());
