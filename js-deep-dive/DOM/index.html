@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="text" />
+    <ul>
+      <li id="apple">Apple</li>
+      <li id="banana">Banana</li>
+      <li id="orange">Orange</li>
+    </ul>
+    <script>
+      const $input = document.querySelector("input");
+
+      // input 요소 노드 객체의 프로토타입 체인
+      console.log(Object.getPrototypeOf($input) === HTMLInputElement.prototype); // true
+      console.log(
+        Object.getPrototypeOf(HTMLInputElement.prototype) ===
+          HTMLElement.prototype
+      ); // true
+      console.log(
+        Object.getPrototypeOf(HTMLElement.prototype) === Element.prototype
+      ); // true
+      console.log(Object.getPrototypeOf(Element.prototype) === Node.prototype); // true
+      console.log(
+        Object.getPrototypeOf(Node.prototype) === EventTarget.prototype
+      ); // true
+      console.log(
+        Object.getPrototypeOf(EventTarget.prototype) === Object.prototype
+      );
+
+      const $elem = document.getElementById("banana");
+      // 취득한 요소 노드의 style.color 프로퍼티 값을 변경한다.
+      $elem.style.color = "red";
+
+      // HTML 요소가 존재하지 않는 경우 null 반환
+      const $elemGrape = document.getElementById("grape");
+      console.log($elemGrape); // null
+
+      // HTML 요소에 id 어트리뷰트는 부여하면 id 값과 동일한 이름의
+      // 전역변수가 암묵적으로 선언되고 해당 노드에 객체가 할당되는
+      // 부수효과가 있다.
+      // console.log(banana); // <li id="banana" style="color: red;">Banana</li>
+      // 단 id 값과 동일한 이름의 전역 변수가 이미 선언되어 있으면
+      // 노드 객체가 재할당되지 않는다.
+      const banana = 1;
+      console.log(banana); // 1
+
+      // Document.prototype.getElementsByTagName
+      // 모든 요소 노드들을 탐색하여 반환.
+      // 유사배열객체, 이터러블
+      const $elems = document.getElementsByTagName("li");
+      console.log($elems);
+      [...$elems].forEach((elem) => (elem.style.color = "brown"));
+
+      // 모든 요소를 취득하려면 인수에 '*'를 전달한다.
+      const $all = document.getElementsByTagName("*");
+      console.log($all);
+    </script>
+  </body>
+</html>
