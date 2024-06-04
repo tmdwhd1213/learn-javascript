@@ -4,14 +4,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      .red {
+        color: red;
+      }
+      .blue {
+        color: blue;
+      }
+    </style>
   </head>
   <body>
     <input type="text" />
-    <ul>
-      <li id="apple">Apple</li>
-      <li id="banana">Banana</li>
-      <li id="orange">Orange</li>
+    <ul id="fruits">
+      <li class="fruit apple" id="apple">Apple</li>
+      <li class="fruit banana" id="banana">Banana</li>
+      <li class="fruit orange" id="orange">Orange</li>
     </ul>
+    <ul>
+      <li class="html">HTML</li>
+    </ul>
+    <div class="fruit apple">other apple</div>
+    <ol id="test">
+      <li class="test1">test1</li>
+      <li class="test2">test2</li>
+      <li class="test3">test3</li>
+    </ol>
+    <div id="otherRoot">
+      <ul id="alphabet">
+        <li class="red">a</li>
+        <li class="red">b</li>
+        <li class="red">c</li>
+      </ul>
+    </div>
     <script>
       const $input = document.querySelector("input");
 
@@ -53,12 +77,186 @@
       // 모든 요소 노드들을 탐색하여 반환.
       // 유사배열객체, 이터러블
       const $elems = document.getElementsByTagName("li");
-      console.log($elems);
-      [...$elems].forEach((elem) => (elem.style.color = "brown"));
+      console.log($elems); // li 전체
 
+      const $fruits = document.getElementById("fruits");
+      // Element.prototype.getElementsByTagName
+      // 특정 요소의 자손 노드 중에서 요소노드를 탐색해 반환함.
+      const $lisFromFruits = $fruits.getElementsByTagName("li");
+      console.log($lisFromFruits); // fruits 중에서의 li만
+      [...$lisFromFruits].forEach((elem) => (elem.style.color = "brown"));
       // 모든 요소를 취득하려면 인수에 '*'를 전달한다.
       const $all = document.getElementsByTagName("*");
       console.log($all);
+
+      // class를 이용한 요소 노드 취득
+      // Document.prototype.getElementsByClassName, Element.prorotype.getElementsByClassName
+      const $fruitClass = document.getElementsByClassName("fruit");
+      console.log($fruitClass);
+      [...$fruitClass].forEach((elem) => (elem.style.color = "red"));
+
+      // class 값이 fruit apple인 요소 노드를 모두 탐색해 HTMLCollection 객체에 담아 반환
+      const $apples = document.getElementsByClassName("fruit apple");
+      [...$apples].forEach((elem) => (elem.style.color = "blue"));
+      // Element.prototype.getElementsByClassName -> 자식 요소만 변경
+      const $fruitsChildApple = $fruits.getElementsByClassName("fruit apple");
+      [...$fruitsChildApple].forEach((elem) => (elem.style.color = "green"));
+
+      // CSS 셀렉터
+      // 전체 선택자: * -> 모든 요소 선택
+      // 태그 선택자: p, li, div 등등 -> 모든 p 태그 요소를 모두 선택
+      // id 선택자: #foo -> id값이 'foo'인 요소를 모두 선택
+      // class 선택자: .bar -> class값이 'bar'인 요소를 모두 선택
+      // 어트리뷰트 선택자: input[type=text] -> input중 text타입인 요소 모두 선택
+      // 후손 선택자: div p -> div 요소중 모든 p 태그를 선택
+      // 자식 선택자: div > p -> div 요소중 바로 아래의 p 자식들만 선택
+      // 인접 형제 선택자: p + ul -> p 요소 형제 중 바로 뒤의 ul요소를 선택
+      // 일반 형제 선택자: p ~ ul -> p 요소 형제 중 뒤에 위치한 모든 ul 형제들을 선택
+      // 가상 클래스 선택자: a:hover -> hover 상태인 a 요소를 모두 선택
+      // 가상 요소 선택자: p::before -> p 요소의 콘텐츠 앞에 위치하는 공간을 선택
+      // 일반적으로 content 프로퍼티와 함께 사용됨
+      // Document/Element.prototype.querySelector()
+      // CSS 셀렉터를 만족시키는 '하나'의 요소를 탐색해 반환
+      // 여러 개일 경우 제일 처음 것만 반환, 존재X null 반환
+      const $querySelectorElem = document.querySelector(".html");
+      $querySelectorElem.style.color = "yellow";
+
+      // Document/Element.prototype.querySelectorAll() -> 전부 반환
+      // 존재X -> 빈 NodeList객체 반환
+      const $querySelctorAllLis = document.querySelectorAll("ol > li");
+      [...$querySelctorAllLis].forEach((elem) => (elem.style.color = "orange"));
+
+      // input type='text'인 요소를 선택
+      const $inputText = document.querySelector("input[type=text]");
+      $inputText.style.backgroundColor = "#e19a2c";
+
+      // getElementsBy 뭐시기가 속도가 더 빠름.
+      // id 어트리뷰트가 있는 요소는 getElementById를
+      // 나머지 요소는 querySelector를 사용하자
+
+      // Element.prototype.matches -> 특정 요소 노드를 취득할 수 있는지 확인
+      // 이벤트 위임할 때 유용하다.
+      const $test2 = document.querySelector(".test2");
+      console.log($test2.matches("#test > li.test2")); // true
+      console.log($test2.matches("#test > li.test3")); // false
+
+      // HTMLCollection: live 객체로 동작한다. (상태 변화 실시간 반영)
+      // HTMLCollection은 getElementsByTagName, getElementsByClassName이 반환함.
+      // NodeList: 과거의 정적 상태를 유지하지만, 때때로 live 객체로 동작할 수 있다.
+      const $reds = document.getElementsByClassName("red"); // HTMLCollection (3)
+      console.log($reds);
+
+      for (let i = 0; i < $reds.length; i++) {
+        $reds[i].className = "blue";
+      }
+      console.log($reds);
+      // 가운데만 살아남음. 그 이유는 라이브 객체이기 떄문에
+      // $reds[0]의 클래스가 blue가 되어 $reds는 길이가 2인 유사배열객체가 됨.
+      // 길이가 2가 된 상태로 for문이 돈다. 이때 $reds[1]은 유사배열객체의 마지막 요소가 됨.
+      // 원래의 $reds[2]도 blue로 되고 제거되어 유사배열객체는 길이가 1인 상태로 됨.
+      // 3번째 for문을 돌 떄 길이가 1인 상태이므로 인덱스 2번이 없다, 따라서 false가 되어
+      // for문 탈출됨.
+
+      // 이 문제는 for문을 감소식으로 작성해서 회피할 수 있다.
+      for (let i = $reds.length - 1; i >= 0; i--) {
+        $reds[i].className = "blue";
+      }
+
+      // 제일 쉬운 해결 방법은 HTMLCollection이 이터러블이므로 배열로 바꿔서 하면 됨.
+
+      // NodeList는 이러한 HTMLCollection이 갖고 있는 부작용을 해결하기 위해 나타났다.
+      // 하지만 NodeList의 childNodes 프로퍼티를 건드리면 실시간으로 변경된다.(라이브객체)
+      const $alphabet = document.querySelector("#alphabet");
+      const { childNodes } = $alphabet;
+      console.log(childNodes); // NodeList(7) [text, li, text ...] - text는 공백 텍스트 노드
+      console.log(childNodes instanceof NodeList); // true
+
+      for (let i = 0; i < childNodes.length; i++) {
+        $alphabet.removeChild(childNodes[i]);
+      }
+
+      console.log(childNodes); // HTMLCollection 처럼 live객체이므로 원하는 대로 동작X
+      // 스프레드 문법으로 배열로 변환 후 배열 메서드 ㄱㄱ
+      [...childNodes].forEach((childNode) => $alphabet.removeChild(childNode));
+      console.log(childNodes); // NodeList []
+
+      // 요소 노드를 취득한 다음, DOM트리의 노드를 옮겨다니며 부모, 형제, 자식 노드를 탐색
+      // 해야하는 경우가 있다.
+      /*
+        <ul id='fruits'>
+          <li class='apple'>Apple</li>
+          <li class='banana'>Banana</li>
+          <li class='orange'>Orange</li>
+        </ul>
+
+        여기서 ul#fruits를 먼저 취득하면 자식 노드만 탐색할 수 있다.
+        li.banana 요소를 탐색하면 형제 요소와 부모 요소를 갖는다. 모두 탐색 가능
+        부모 요소 -> parentNode
+        형제 -> previousSibling(이전), nextSibling(이후)
+        자식 -> firstChild(첫째), lastChild(막내)
+        
+        노드 탐색 프로퍼티는 모두 setter가 없는 읽기 전용 접근자 프로퍼티이다.
+      */
+
+      // 공백 텍스트 노드
+      // HTML 요소 사이의 space, tab, 줄바꿈(개행) 등의 공백문자는 텍스트 노드를 생성
+      // 자식 노드 탐색
+      // Node.prototype.childNodes -> 텍스트 노드를 포함한 NodeList. 자식 찾을 때 불리
+      // Element.prototype.children -> 텍스트 노드X -> HTMLCollection 반환
+      // Node.prototype.firstChild -> 첫번째 자식 노드 -> 텍스트 노드도 포함해서 원치 않은 상황
+      // Element.prototype.firstElementChild -> 첫번째 자식 요소 노드를 반환함.
+      // Element.prototype.lastElementChild -> 마지막 자식 요소 노드를 반환함.
+      // Element를 쓰자!
+
+      const $otherRoot = document.getElementById("otherRoot");
+      $otherRoot.innerHTML = `
+        <ul id='한글'>
+          <li class='가'>가</li>
+          <li class='나'>나</li>
+          <li class='다'>다</li>
+        </ul>
+      `;
+      const $h = document.getElementById("한글");
+
+      // Node.prototype.childNodes
+      console.log($h.childNodes); // NodeList(7) [text, li.가, text, li.나, text, li.다, text]
+
+      // Element.prototype.children
+      console.log($h.children); // HTMLCollection(3) [li.가, li.나, li.다]
+
+      // Node.prototype.firstChild
+      console.log($h.firstChild); // #text
+
+      // Element.prototype.firstElementChild
+      console.log($h.firstElementChild); // li.가
+
+      // Node.prototype.lastChild
+      console.log($h.lastChild); // #text
+
+      // Element.prototype.lastElementChild
+      console.log($h.lastElementChild); // li.다
+
+      // 자식 노드 존재 확인
+      // hasChildNodes 메서드는 텍스트 노드를 포함하여 자식 노드 확인 (정확도 낮음)
+      console.log($h.hasChildNodes()); // true
+      // 텍스트 노드를 제외한 자식 요소 노드가 존재하는지 확인
+      console.log(!!$h.children.length); // 3 -> true
+      console.log(!!$h.childElementCount); // 3 -> true
+
+      // 부모 노드 탐색: 부모 노드가 텍스트 노드인 경우는 없다.
+      // 텍스트 노드는 제일 끝 노드(리프 노드)이기 때문에
+      const $na = document.querySelector(".나");
+      console.log($na.parentNode); // ul#한글
+
+      // 형제 노드 탐색: 이도 마찬가지로 Element 들어간 아이로 검색해야 텍스트 노드 제외
+      const { firstElementChild } = $h;
+      console.log(firstElementChild); // li.가
+      const { nextElementSibling } = firstElementChild;
+      console.log(nextElementSibling); // li.나
+      const { nextElementSibling: lastElementSibling } = nextElementSibling;
+      console.log(lastElementSibling); // li.다
+      const { previousElementSibling } = lastElementSibling;
+      console.log(previousElementSibling); // li.나
     </script>
   </body>
 </html>
