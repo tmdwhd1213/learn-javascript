@@ -73,11 +73,25 @@ console.log(typeof parsed, parsed);
 // Javascript로 HTTP 요청을 전송하려면 XMLHttpRequest 객체를 사용해야 함.
 const xhr = new XMLHttpRequest();
 // HTTP 요청 초기화
-xhr.open("GET", "http://localhost:3000/users");
+xhr.open("GET", "http://localhost:3000/users?test=hi&foo=bar");
 
 // HTTP 요청 헤더 설정
 // 클라이언트 -> 서버로 전송할 데이터의 MIME 타입 지정: json
 xhr.setRequestHeader("content-type", "application/json");
+
+// cf. 클라이언트 -> 서버로 전송할 데이터: x-www-form-urlencoded
+// 쿼리스트링의 형태로 전송 key=value&key2=value2
+const xhr2 = new XMLHttpRequest();
+xhr2.open("POST", "http://localhost:3000/users");
+xhr2.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+
+const data = { title: "Javascript", autor: "Park", price: 5000 };
+
+xhr2.send(
+  Object.keys(data)
+    .map((key) => `${key}=${data[key]}`)
+    .join("&")
+);
 
 // HTTP 요청 전송
 // 요청 몸체에 담아 전송할 데이터(페이로드)를 인수로 전달할 수 있다.
@@ -85,4 +99,113 @@ xhr.setRequestHeader("content-type", "application/json");
 // 메서드가 GET인 경우 인수는 무시됨.
 xhr.send(JSON.stringify(parsed));
 
-console.log(xhr.readyState);
+// XMLHttpResquest.readyState 프로퍼티가 변경(이벤트 발생)될 때마다 onreadystatechange
+// 이벤트 핸들러가 호출된다.
+xhr.onreadystatechange = function (e) {
+  // readyState는 XMLHttpRequest의 상태를 반환 : 4 => DONE)서버 응답 완료
+  if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+  if (xhr.status === 200) {
+    console.log(xhr.responseText);
+    // document.getElementById("content").textContent = xhr.responseText;
+    showTours(xhr.responseText);
+  } else {
+    console.log(`[${shr.status}] : ${xhr.statusText}`);
+  }
+};
+
+//서버에 원격 서버로부터 데이터를 수집하는 별도의 기능을 추가하는 것이다.
+// CORS 우회 : 이를 프록시(Proxy)라 한다.
+
+function showTours(parsed) {
+  // console.log(parsed); // data: object
+  const data = JSON.parse(parsed);
+  console.log(data);
+
+  // JSON -> HTML String
+  let newContent = `<div id="tours>
+    <h1>Guided Tours</h1>
+    <ul>
+  `;
+
+  data.tours?.forEach((tour) => {
+    newContent += `<li class="${tour.region} tour"
+        <h2>${tour.location}</h2>
+        <span class="details">${tour.details}</span>
+        <button class="book">Book Now</button>
+      </li>
+    `;
+  });
+
+  newContent += `</ul></div>`;
+
+  document.getElementById("content").innerHTML = newContent;
+}
+
+// REST API
+const restXhr = new XMLHttpRequest();
+restXhr.open("GET", "http://localhost:5000/todos/1");
+restXhr.send();
+// restXhr.open("POST", "http://localhost:5000/todos");
+// restXhr.setRequestHeader("Content-Type", "application/json");
+// restXhr.send(JSON.stringify({ id: 5, content: "React", completed: true }));
+
+restXhr.onreadystatechange = function (e) {
+  if (restXhr.readyState !== XMLHttpRequest.DONE) return;
+
+  if (restXhr.status === 200) {
+    console.log(restXhr.response);
+  } else {
+    console.log("Error!");
+  }
+};
+
+// POST
+/*
+  $ curl -X POST http://localhost:5000/todos -H "Content-Type: application/json" -d '{"id": 4, "content": "Angular", "completed": true}'
+{
+  "id": 4,
+  "content": "Angular",
+  "completed": true
+}
+*/
+
+function postHandler() {
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "http://localhost:5000/todos");
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send(JSON.stringify({ id: 4, content: "js", completed: false }));
+
+  xhr.onreadystatechange = function (e) {
+    if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+    if (xhr.status === 201) {
+      // 201: created
+      console.log(xhr.response);
+    } else {
+      console.log("error");
+    }
+  };
+}
+
+document.getElementById("dbPost").addEventListener("click", postHandler);
+
+// DELETE
+// $ curl -X DELETE http://localhost:5000/todos/4
+function deleteHandler() {
+  const xhr = new XMLHttpRequest();
+  xhr.open("DELETE", `http://localhost:5000/todos/4`);
+  xhr.send();
+
+  xhr.onreadystatechange = function (e) {
+    if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+    if (xhr.status === 200) {
+      console.log(xhr.response);
+    } else {
+      console.log("Err!");
+    }
+  };
+}
+
+document.getElementById("dbDelete").addEventListener("click", deleteHandler);
