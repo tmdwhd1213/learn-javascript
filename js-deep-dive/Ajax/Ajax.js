@@ -209,3 +209,22 @@ function deleteHandler() {
 }
 
 document.getElementById("dbDelete").addEventListener("click", deleteHandler);
+
+// PATCH
+// $ curl -X PATCH http://localhost:5000/todos/4 -H "Content-Type: application/json" -d '{"completed": true}'
+function patchHandler() {
+  const xhr = new XMLHttpRequest();
+  xhr.open("PATCH", `http://localhost:5000/todos/4`);
+  xhr.setRequestHeader("Content-Type", "application/json");
+
+  xhr.onreadystatechange = function (e) {
+    if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+    if (xhr.status === 200) {
+      console.log(xhr.response);
+    } else {
+      console.log("Error!");
+    }
+  };
+}
+document.getElementById("dbPatch").addEventListener("click", patchHandler);

@@ -16,19 +16,19 @@
       "completed": false
     },
     {
-      "id": 5,
+      "id": "5",
       "content": "React",
       "completed": true
     },
     {
-      "id": 6,
+      "id": "6",
       "content": "Next.js",
       "completed": false
     },
     {
-      "id": 4,
+      "id": "4",
       "content": "js",
-      "completed": false
+      "completed": true
     }
   ]
 }
