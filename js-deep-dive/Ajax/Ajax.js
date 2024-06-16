@@ -216,6 +216,7 @@ function patchHandler() {
   const xhr = new XMLHttpRequest();
   xhr.open("PATCH", `http://localhost:5000/todos/4`);
   xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send(JSON.stringify({ completed: true }));
 
   xhr.onreadystatechange = function (e) {
     if (xhr.readyState !== XMLHttpRequest.DONE) return;
@@ -228,3 +229,14 @@ function patchHandler() {
   };
 }
 document.getElementById("dbPatch").addEventListener("click", patchHandler);
+
+/*페이로드란?
+  {
+    "status":"OK",
+    "data": {
+        "message":"Hello, world!"
+    }
+}
+
+이 JSON 데이터 중에 "Hello, world!"가 클라이언트가 관심을 가지는 페이로드다. 나머지 부분은 중요하지만 프로토콜 오버헤드다.
+*/
