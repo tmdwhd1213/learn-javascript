@@ -30,3 +30,25 @@ console.log(pi); // 3.141592...
 // default 키워드를 사용하는 경우 기본적으로 이름 없이 하나의 값을 export한다.
 // default 키워드를 사용하는 경우 var, let, const 키워드는 사용할 수 없다.
 console.log(test(3)); // default는 {}없이 임의의 이름으로 import
+
+// ESM 보다는 별도의 모듈 로더를 사용하는 것이 일반적인 이유
+// 1. IE를 포함한 구형 브라우저는 ESM을 지원하지 않음.
+// 2. ESM을 사용하더라도 트랜스파일링이나 번들링이 필요한 것은 변함없다.
+// 3. ESM이 아직 지원하지 않는 기능(bare import 등)이 있고 점차 해결되고 있지만 완벽한 것X.
+
+// 트랜스파일러인 Babel과 모듈 번들러인 Webpack을 이용하여 ES6+/ES.NEXT 개발 환경을 구축하자
+
+// Babel -> @babel/cli, @babel/core
+
+// Babel을 사용하려면 프리셋을 설치해야 한다. @babel/preset-env는 함께 사용되어야 하는
+// Babel 플러그인들을 모아 둔 것으로 Babel 프리셋이라 부른다.
+// Babel 프리셋 -> @babel/preset-env
+// npm 세팅을 하고 루트 디렉토리에 babel.config.json 파일을 만들어 다음과 같이 작성
+/* 설치한 @babel/preset-env를 사용하겠다는 의미다.
+{
+  "presets": ["@babel/preset-env"]
+}
+*/
+
+// 매번 Babel CLI 명령어를 입력하는 것은 번거롭다. npm scripts에 명령어를 등록하자.
+// package.json 참고 (루트 디렉토리/src/js/main.js 로 이동)
